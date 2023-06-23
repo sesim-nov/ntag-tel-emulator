@@ -1,5 +1,6 @@
 #pragma once
 
+#include <furi.h>
 #include <gui/view_dispatcher.h>
 #include <gui/scene_manager.h>
 #include <gui/modules/dialog_ex.h>
@@ -17,3 +18,7 @@ typedef struct {
     NtagTelEmulatorModel* model;
 } NtagTelEmulatorData;
 
+typedef enum {
+    NtagTelEmulatorViewDialog,
+    NtagTelEmulatorViewMAX,
+} NtagTelEmulatorViews;
