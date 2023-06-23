@@ -21,7 +21,9 @@ NtagTelEmulatorData* ntag_tel_emulator_data_alloc() {
     
     instance->view_dispatcher = view_dispatcher_alloc();
     instance->dialog_ex = dialog_ex_alloc();
-    view_dispatcher_add_view(instance->view_dispatcher, NtagTelEmulatorViewDialog, dialog_ex_get_view(instance->dialog_ex));
+    view_dispatcher_add_view(instance->view_dispatcher, 
+            NtagTelEmulatorViewDialog, 
+            dialog_ex_get_view(instance->dialog_ex));
 
     instance->model = ntag_tel_emulator_model_alloc();
     return instance;
