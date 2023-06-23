@@ -1,0 +1,13 @@
+App(
+    appid="ntag_tel_emulator",
+    apptype=FlipperAppType.EXTERNAL,
+    name="NFC Tel Tag Emulator",
+    entry_point="ntag_tel_emaulator_app",
+    stack_size=1 * 1024,
+    cdefines=["APP_TEL_EMULATOR"],
+    requires=[
+        "gui",
+    ],
+    order=10,
+    fap_category="NFC",
+)
