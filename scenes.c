@@ -1,8 +1,8 @@
 #include "scenes.h"
-
-const AppSceneOnEnterCallback nte_scene_enter_handlers[] = {};
-const AppSceneOnEventCallback nte_scene_event_handlers[] = {};
-const AppSceneOnExitCallback nte_scene_exit_handlers[] = {};
+#include "scene_welcome.h"
+const AppSceneOnEnterCallback nte_scene_enter_handlers[] = {scene_welcome_on_enter};
+const AppSceneOnEventCallback nte_scene_event_handlers[] = {scene_welcome_on_event};
+const AppSceneOnExitCallback nte_scene_exit_handlers[] = {scene_welcome_on_exit};
 
 const SceneManagerHandlers nte_scene_manager_handlers = {
 	.on_enter_handlers = nte_scene_enter_handlers,
