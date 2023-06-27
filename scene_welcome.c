@@ -3,8 +3,8 @@
 void scene_welcome_dialog_result_callback(DialogExResult result, void* ctx) {
     UNUSED(result);
     NtagTelEmulatorData* instance = ctx;
-    UNUSED(instance);
-//    scene_manager_next_scene(instance->scene_manager, InputHandlingSceneInput);
+    scene_manager_stop(instance->scene_manager);
+    view_dispatcher_stop(instance->view_dispatcher);
 }
 
 /*
