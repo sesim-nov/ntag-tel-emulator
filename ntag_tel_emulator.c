@@ -7,11 +7,14 @@ NtagTelEmulatorModel* ntag_tel_emulator_model_alloc(){
 
     instance->nfc_file_name = furi_string_alloc();
 
+    instance->nfc = nfc_device_alloc();
+
     return instance;
 }
 
 void ntag_tel_emulator_model_free(NtagTelEmulatorModel* instance){
     furi_string_free(instance->nfc_file_name);
+    nfc_device_free(instance->nfc);
     free(instance);
 }
 
