@@ -1,6 +1,7 @@
 
 #include "ntag_tel_emulator.h"
 #include "scenes.h"
+#include <lib/nfc/protocols/mifare_ultralight.h>
 
 NtagTelEmulatorModel* ntag_tel_emulator_model_alloc(){
     NtagTelEmulatorModel* instance = malloc(sizeof(NtagTelEmulatorModel));
@@ -13,6 +14,7 @@ NtagTelEmulatorModel* ntag_tel_emulator_model_alloc(){
     // NFC Data
     // TODO: Move elsewhere
     FURI_LOG_D("NtagEmulator", "Setting up NFC Device...");
+    instance->nfc->format = NfcDeviceSaveFormatMifareUl;
     NfcDeviceData* dev_data = &instance->nfc->dev_data;
     FuriHalNfcDevData* nfc_data = &dev_data->nfc_data;
     
@@ -24,6 +26,8 @@ NtagTelEmulatorModel* ntag_tel_emulator_model_alloc(){
     nfc_data->atqa[1] = 0x44;
 
     nfc_data->sak = 0x00;
+
+    dev_data->mf_ul_data.type = MfUltralightTypeNTAG213;
 
     dev_data->mf_ul_data.data_size = 4;
     uint8_t new_data[] = {0xd3, 0x4d, 0xbe, 0xef};
