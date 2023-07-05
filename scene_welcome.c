@@ -3,6 +3,7 @@
 void scene_welcome_dialog_result_callback(DialogExResult result, void* ctx) {
     UNUSED(result);
     NtagTelEmulatorData* instance = ctx;
+    nfc_device_save(instance->model->nfc, "/ext/nfc/derp.nfc");
     scene_manager_stop(instance->scene_manager);
     view_dispatcher_stop(instance->view_dispatcher);
 }
@@ -17,6 +18,8 @@ void scene_welcome_on_enter(void* ctx) {
     dialog_ex_reset(instance->dialog_ex);
 
     dialog_ex_set_header(instance->dialog_ex, "Hello there.", 10, 10, AlignLeft, AlignTop);
+
+    dialog_ex_set_text(instance->dialog_ex, "Go will try to save dummy tag.", 10, 18, AlignLeft, AlignTop);
 
     dialog_ex_set_result_callback(instance->dialog_ex, scene_welcome_dialog_result_callback);
 
