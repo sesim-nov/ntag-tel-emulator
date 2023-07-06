@@ -1,40 +1,23 @@
 #include "ntag_tools.h"
+#include <lib/nfc/helpers/nfc_generators.h>
 
-void write_blank_tag_data(MfUltralightData* target) {
-    uint16_t data_frame_size = 180;
-    target->data_size = data_frame_size;
-    
-    for (uint16_t i = 0; i < data_frame_size; i++) {
-        target->data[i] = 0x0;
+const NfcGenerator* const* get_ntag_generator() {
+    const NfcGenerator* const* gen = nfc_generators;
+    for (; gen != NULL; ++gen) {
+        if (!strcmp((*gen)->name,"NTAG213")) {
+            break;
+        }
     }
-
-    uint16_t footer_size = 20;
-    uint8_t footer_data[] = {
-            0x00, 0x00, 0x00, 0xBD,
-            0x04, 0x00, 0x00, 0xFF,
-            0x00, 0x05, 0x00, 0x00,
-            0xFF, 0xFF, 0xFF, 0xFF,
-            0x00, 0x00, 0x00, 0x00};
-    memcpy(&target->data[data_frame_size - footer_size], footer_data, footer_size);
+    FURI_LOG_D("NtagTelEmulator", "Name: %s", (*gen)->name);
+    return gen;
 }
 
 void ntag_213_init_blank_tag(NfcDevice* nfc) {
     nfc->format = NfcDeviceSaveFormatMifareUl;
-    NfcDeviceData* dev_data = &nfc->dev_data;
-    FuriHalNfcDevData* nfc_data = &dev_data->nfc_data;
-    
-    nfc_data->uid_len = 7;
-    uint8_t new_uid[] = {0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
-    memcpy(&nfc_data->uid, &new_uid, 7);
 
-    nfc_data->atqa[0] = 0x00;
-    nfc_data->atqa[1] = 0x44;
-
-    nfc_data->sak = 0x00;
-
-    dev_data->mf_ul_data.type = MfUltralightTypeNTAG213;
-    
-    write_blank_tag_data(&dev_data->mf_ul_data);
+    const NfcGenerator* const* gen = get_ntag_generator();
+    furi_assert(gen);
+    (*gen)->generator_func(&nfc->dev_data);
 }
 //    uint8_t new_data[] = {
 //                           0x04, 0x30, 0xD2, 0x6E,
