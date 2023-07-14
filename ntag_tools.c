@@ -31,7 +31,7 @@ void print_str(char *s) {
 	}
 }
 
-void construct_ndef_record_header(char* buf, size_t buf_len, size_t payload_len) {
+void construct_ndef_record_header(uint8_t* buf, size_t buf_len, size_t payload_len) {
     // Length check.
     if (buf_len < payload_len) {
         return;
@@ -48,35 +48,42 @@ void construct_ndef_record_header(char* buf, size_t buf_len, size_t payload_len)
 	buf[1] = 0x1; // Type name is 1 byte long
 	
 	// Byte 2: Payload Length (Short Record)
-	buf[2] = payload_len; // Let's reserve 16 bytes for now. 
+	buf[2] = payload_len * sizeof(uint8_t); // Let's reserve 16 bytes for now. 
 	
 	// Byte 3: Payload Type
-	buf[3] = 'U'; 
+	buf[3] = (uint8_t)'U'; 
 }
 
-void create_ndef_tel_record(char* buf, size_t buf_len, char* payload) {
-	char* mod_payload = calloc(strlen(payload) + 2, sizeof(char));
+size_t create_ndef_tel_record(uint8_t* buf, size_t buf_len, uint8_t* payload, size_t payload_len) {
+	uint8_t* mod_payload = malloc((payload_len + 2) * sizeof(uint8_t));
 	mod_payload[0] = 0x05; // Append tel:// NFC shorthand to front of payload
+    size_t mod_payload_len = 1;
 	
-	mod_payload = strcat(mod_payload, payload);
+	mod_payload = memcpy(mod_payload + 1, payload, payload_len * sizeof(uint8_t));
+    mod_payload_len += payload_len;
 
 	// Construct data header
-	size_t header_size = 5;
-	size_t payload_size = strlen(mod_payload);
-	char* header = calloc(header_size, sizeof(char)); 
-	construct_ndef_record_header(header, header_size, payload_size);
+	size_t header_len = 5;
+	uint8_t* header = malloc(header_len * sizeof(uint8_t)); 
+	construct_ndef_record_header(header, header_len, payload_len);
 
 	// Build message
-	size_t total_size = header_size + payload_size + 1;
-	if (buf_len < total_size) {
+	size_t total_len = header_len + payload_len;
+	if (buf_len < total_len) {
 		printf("Message exceeds provided buffer. Increase buffer size.");
-		return;
+		return 0;
 	}
-	strcpy(buf, header);
-	strcat(buf, mod_payload);
+    size_t cursor = 0;
+	memcpy(buf, header, header_len * sizeof(uint8_t));
+    cursor += header_len;
+
+	memcpy(buf + cursor, mod_payload, mod_payload_len * sizeof(uint8_t));
+    cursor += mod_payload_len;
 
 	free(mod_payload);
 	free(header);
+
+    return cursor;
 }
 
 size_t create_tlv_record_for_message(uint8_t* buf, size_t buf_len, uint8_t* message, size_t msg_length) {
@@ -97,7 +104,7 @@ size_t create_tlv_record_for_message(uint8_t* buf, size_t buf_len, uint8_t* mess
 	memcpy(buf + cursor, &l, 1); // Append L
 	cursor++;
 
-	memcpy(buf + cursor, message, msg_length); // Append V (message)
+	memcpy(buf + cursor, message, msg_length * sizeof(uint8_t)); // Append V (message)
 	cursor += msg_length;
 
 	memcpy(buf + cursor, &terminator, 1); // Append terminator byte
