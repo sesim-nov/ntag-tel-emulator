@@ -33,7 +33,7 @@ void print_str(char *s) {
 
 void construct_ndef_record_header(uint8_t* buf, size_t buf_len, size_t payload_len) {
     // Length check.
-    if (buf_len < payload_len) {
+    if (buf_len < 4) {
         return;
     }
 	// Byte 0: TNF byte
@@ -59,13 +59,13 @@ size_t create_ndef_tel_record(uint8_t* buf, size_t buf_len, uint8_t* payload, si
 	mod_payload[0] = 0x05; // Append tel:// NFC shorthand to front of payload
     size_t mod_payload_len = 1;
 	
-	mod_payload = memcpy(mod_payload + 1, payload, payload_len * sizeof(uint8_t));
+	memcpy(mod_payload + 1, payload, payload_len * sizeof(uint8_t));
     mod_payload_len += payload_len;
 
 	// Construct data header
-	size_t header_len = 5;
+	size_t header_len = 4;
 	uint8_t* header = malloc(header_len * sizeof(uint8_t)); 
-	construct_ndef_record_header(header, header_len, payload_len);
+	construct_ndef_record_header(header, header_len, mod_payload_len);
 
 	// Build message
 	size_t total_len = header_len + mod_payload_len;
