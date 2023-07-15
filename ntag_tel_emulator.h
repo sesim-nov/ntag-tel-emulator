@@ -4,6 +4,7 @@
 #include <gui/view_dispatcher.h>
 #include <gui/scene_manager.h>
 #include <gui/modules/dialog_ex.h>
+#include <gui/modules/text_input.h>
 #include <lib/nfc/nfc_device.h>
 
 typedef struct {
@@ -18,11 +19,13 @@ typedef struct {
 
     ViewDispatcher* view_dispatcher;
     DialogEx* dialog_ex;
+    TextInput* text_input;
 
     NtagTelEmulatorModel* model;
 } NtagTelEmulatorData;
 
 typedef enum {
     NtagTelEmulatorViewDialog,
+    NtagTelEmulatorViewTextInput,
     NtagTelEmulatorViewMAX,
 } NtagTelEmulatorViews;

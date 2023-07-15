@@ -57,6 +57,12 @@ NtagTelEmulatorData* ntag_tel_emulator_data_alloc() {
             NtagTelEmulatorViewDialog, 
             dialog_ex_get_view(instance->dialog_ex));
 
+    // Text Input
+    instance->text_input = text_input_alloc();
+    view_dispatcher_add_view(instance->view_dispatcher, 
+            NtagTelEmulatorViewTextInput, 
+            text_input_get_view(instance->text_input));
+
     //Model
     instance->model = ntag_tel_emulator_model_alloc();
 
@@ -67,7 +73,9 @@ void ntag_tel_emulator_data_free(NtagTelEmulatorData* instance){
     ntag_tel_emulator_model_free(instance->model);
 
     view_dispatcher_remove_view(instance->view_dispatcher, NtagTelEmulatorViewDialog);
+    view_dispatcher_remove_view(instance->view_dispatcher, NtagTelEmulatorViewTextInput);
     dialog_ex_free(instance->dialog_ex);
+    text_input_free(instance->text_input);
     view_dispatcher_free(instance->view_dispatcher);
 
     free(instance);
