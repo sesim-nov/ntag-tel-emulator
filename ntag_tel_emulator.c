@@ -20,7 +20,7 @@ NtagTelEmulatorModel* ntag_tel_emulator_model_alloc(){
     size_t tag_data_len = 100;
     uint8_t* tag_data = malloc(tag_data_len*sizeof(uint8_t));
     
-    size_t number_len = 10;
+    size_t number_len = 11;
     char* number = "15558675309";
     uint8_t* number_uint = (uint8_t*)number;
 
