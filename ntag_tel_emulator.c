@@ -21,7 +21,7 @@ NtagTelEmulatorModel* ntag_tel_emulator_model_alloc(){
     uint8_t* tag_data = malloc(tag_data_len*sizeof(uint8_t));
     
     size_t number_len = 10;
-    char* number = "1234567890";
+    char* number = "15558675309";
     uint8_t* number_uint = (uint8_t*)number;
 
     tag_data_len = ndef_encode_phone_number(tag_data, tag_data_len, number_uint, number_len);
