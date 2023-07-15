@@ -48,7 +48,7 @@ void construct_ndef_record_header(uint8_t* buf, size_t buf_len, size_t payload_l
 	buf[1] = 0x1; // Type name is 1 byte long
 	
 	// Byte 2: Payload Length (Short Record)
-	buf[2] = payload_len * sizeof(uint8_t); // Let's reserve 16 bytes for now. 
+	buf[2] = payload_len * sizeof(uint8_t); 
 	
 	// Byte 3: Payload Type
 	buf[3] = (uint8_t)'U'; 
@@ -68,9 +68,9 @@ size_t create_ndef_tel_record(uint8_t* buf, size_t buf_len, uint8_t* payload, si
 	construct_ndef_record_header(header, header_len, payload_len);
 
 	// Build message
-	size_t total_len = header_len + payload_len;
+	size_t total_len = header_len + mod_payload_len;
 	if (buf_len < total_len) {
-		printf("Message exceeds provided buffer. Increase buffer size.");
+		FURI_LOG_D("NtagEmulator", "Message exceeds provided buffer. Increase buffer size.");
 		return 0;
 	}
     size_t cursor = 0;
@@ -88,9 +88,10 @@ size_t create_ndef_tel_record(uint8_t* buf, size_t buf_len, uint8_t* payload, si
 
 size_t create_tlv_record_for_message(uint8_t* buf, size_t buf_len, uint8_t* message, size_t msg_length) {
     if (msg_length > ((2 << 7) - 3)) {
+		FURI_LOG_D("NtagEmulator", "Message too big");
         return 0;
     } else if (buf_len < (uint8_t)(msg_length + 3)) {
-		printf("Buffer too small");
+		FURI_LOG_D("NtagEmulator", "Buffer too small");
 		return 0;
 	}
     
@@ -113,6 +114,15 @@ size_t create_tlv_record_for_message(uint8_t* buf, size_t buf_len, uint8_t* mess
     return cursor;
 }
 
+size_t ndef_encode_phone_number(uint8_t* buf, size_t buf_len, uint8_t* number, uint8_t number_len) {
+    size_t tel_record_len = number_len + 10;
+    uint8_t* tel_record = malloc(tel_record_len * sizeof(uint8_t));
+    tel_record_len = create_ndef_tel_record(tel_record, tel_record_len, number, number_len);
+
+    size_t out = create_tlv_record_for_message(buf, buf_len, tel_record, tel_record_len);
+    free(tel_record);
+    return out;
+}
 //    uint8_t new_data[] = {
 //                           0x04, 0x30, 0xD2, 0x6E,
 //                           0xEB, 0xA1, 0x47, 0x88,

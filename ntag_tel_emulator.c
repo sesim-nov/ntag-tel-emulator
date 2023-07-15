@@ -16,6 +16,22 @@ NtagTelEmulatorModel* ntag_tel_emulator_model_alloc(){
     // TODO: Move elsewhere
     FURI_LOG_D("NtagEmulator", "Setting up NFC Device...");
     ntag_213_init_blank_tag(instance->nfc);
+
+    size_t tag_data_len = 100;
+    uint8_t* tag_data = malloc(tag_data_len*sizeof(uint8_t));
+    
+    size_t number_len = 10;
+    char* number = "1234567890";
+    uint8_t* number_uint = (uint8_t*)number;
+
+    tag_data_len = ndef_encode_phone_number(tag_data, tag_data_len, number_uint, number_len);
+
+    NfcDeviceData* dev_data = &instance->nfc->dev_data;
+    memcpy(dev_data->mf_ul_data.data + 16, tag_data, tag_data_len);
+    dev_data->mf_ul_data.data_size += tag_data_len * sizeof(uint8_t);
+    FURI_LOG_D("NtagEmulator", "Set up NFC Device...");
+    FURI_LOG_D("NtagEmulator", "Data byte 16... %s", dev_data->mf_ul_data.data+16);
+
     return instance;
 }
 
