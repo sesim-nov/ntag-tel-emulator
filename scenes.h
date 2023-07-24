@@ -2,6 +2,7 @@
 
 typedef enum{
 	NTESceneWelcome,
+	NTESceneNumberEntry,
 	NTESceneMAX,
 } NTEScenes;
 
