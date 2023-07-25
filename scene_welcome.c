@@ -8,7 +8,7 @@ void scene_welcome_dialog_result_callback(DialogExResult result, void* ctx) {
             scene_manager_next_scene(instance->scene_manager, NTESceneNumberEntry);
             break;
         default:
-            nfc_device_save(instance->model->nfc, "/ext/nfc/derp.nfc");
+            furi_string_set_str(instance->model->phone_number, "15558675309");
             scene_manager_stop(instance->scene_manager);
             view_dispatcher_stop(instance->view_dispatcher);
     }
