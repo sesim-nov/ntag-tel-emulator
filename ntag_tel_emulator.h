@@ -21,6 +21,8 @@ typedef struct {
     DialogEx* dialog_ex;
     TextInput* text_input;
 
+    char* text_input_buffer;
+
     NtagTelEmulatorModel* model;
 } NtagTelEmulatorData;
 

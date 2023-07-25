@@ -4,6 +4,8 @@
 #include "ntag_tools.h"
 #include <lib/nfc/protocols/mifare_ultralight.h>
 
+const int NTE_TEXT_BUFFER_MAX = 20;
+
 NtagTelEmulatorModel* ntag_tel_emulator_model_alloc(){
     NtagTelEmulatorModel* instance = malloc(sizeof(NtagTelEmulatorModel));
 
@@ -62,6 +64,9 @@ NtagTelEmulatorData* ntag_tel_emulator_data_alloc() {
     view_dispatcher_add_view(instance->view_dispatcher, 
             NtagTelEmulatorViewTextInput, 
             text_input_get_view(instance->text_input));
+
+    // Text Input Buffer
+    instance->text_input_buffer = malloc(NTE_TEXT_BUFFER_MAX * sizeof(char));
 
     //Model
     instance->model = ntag_tel_emulator_model_alloc();
