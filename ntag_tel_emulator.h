@@ -11,6 +11,7 @@ extern const int NTE_TEXT_BUFFER_MAX;
 
 typedef struct {
     FuriString* nfc_file_name;
+
     FuriString* phone_number;
 
     // NFC device to store and process generated nfc data. 
