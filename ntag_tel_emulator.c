@@ -5,6 +5,8 @@
 #include <lib/nfc/protocols/mifare_ultralight.h>
 
 const int NTE_TEXT_BUFFER_MAX = 20;
+const char* BASE_PATH="/ext/nfc/";
+const char* EXTENSION=".nfc";
 
 NtagTelEmulatorModel* ntag_tel_emulator_model_alloc(){
     NtagTelEmulatorModel* instance = malloc(sizeof(NtagTelEmulatorModel));
@@ -99,7 +101,11 @@ int ntag_tel_emulator_app() {
     memcpy(dev_data->mf_ul_data.data + 16, tag_data, tag_data_len);
 
     // Save NFC File
-    nfc_device_save(app->model->nfc, "/ext/nfc/derp-2.nfc");
+    FuriString* filepath = furi_string_alloc_set_str(BASE_PATH);
+    furi_string_cat(filepath, app->model->nfc_file_name);
+    furi_string_cat_str(filepath, EXTENSION);
+    nfc_device_save(app->model->nfc, furi_string_get_cstr(filepath));
+    free(filepath);
 
     furi_record_close("gui");
     ntag_tel_emulator_data_free(app);

@@ -9,8 +9,7 @@ void scene_welcome_dialog_result_callback(DialogExResult result, void* ctx) {
             break;
         default:
             furi_string_set_str(instance->model->phone_number, "15558675309");
-            scene_manager_stop(instance->scene_manager);
-            view_dispatcher_stop(instance->view_dispatcher);
+            scene_manager_next_scene(instance->scene_manager, NTESceneFilename);
     }
 }
 
