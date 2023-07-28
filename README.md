@@ -1,3 +1,3 @@
 # ntag-tel-emulator
 
-This application currently requires custom firmware that surfaces API symbols the Flipper Official Firmware doesn't have. I'll probably fix this in the future, but for now it's a good way to generate a tag without having to reinvent the wheel. 
+This application takes as input a phone number and file name, and outputs an NFC file that can be emulated. This file contains a TEL record for the input number. Emulation tested and working in NFC Tools and Android itself. 
